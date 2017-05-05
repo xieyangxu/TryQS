@@ -60,9 +60,9 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 {
 	if (!negative&&b.negative)
 		return 1;
-	if (negative&&!b.negative)
+	else if (negative&&!b.negative)
 		return -1;
-	if (negative&&b.negative)
+	else if (negative&&b.negative)
 	{
 		for (int i = MAX - 1; i >= 0; --i)
 		{
@@ -73,17 +73,14 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 		}
 		return 0;
 	}
-	if (!negative&&!b.negative)
+	for (int i = MAX - 1; i >= 0; --i)
 	{
-		for (int i = MAX - 1; i >= 0; --i)
-		{
-			if (num[i] > b.num[i])
-				return 1;
-			if (num[i] < b.num[i])
-				return -1;
-		}
-		return 0;
+		if (num[i] > b.num[i])
+			return 1;
+		if (num[i] < b.num[i])
+			return -1;
 	}
+	return 0;
 }
 bool BigInt::lessthan(const BigInt &b, int n) const
 {
