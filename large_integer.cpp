@@ -1,30 +1,11 @@
-#include <iostream> 
+//#include <iostream>
 #include <cstring> 
-#include <cstdlib> 
-#include <cstdio> 
-using namespace std;
+#include <cstdlib>
+#include "large_integer.h"
+//#include <cstdio> 
+//using namespace std;
 
-const int MAX = 5000;
-class BigInt {
-	bool negative;
-	int num[MAX];
-public:
-	BigInt(const char*);
-	BigInt(int);
 
-	int compare(const BigInt&) const;
-	bool lessthan(const BigInt&, int) const;
-	
-	BigInt operator - () const;
-	BigInt operator +(const BigInt&);
-	BigInt operator -(const BigInt&);
-	BigInt operator *(const BigInt&);
-	BigInt operator /(const BigInt&);
-	BigInt operator %(const BigInt&);
-	BigInt bigsqrt();
-
-	friend ostream &operator << (ostream&, const BigInt&);
-};
 
 BigInt::BigInt(const char*s)
 {
@@ -49,7 +30,7 @@ BigInt::BigInt(int i)
 	}
 	else
 		negative = false;
-	for (int j = 0; j<MAX; ++j)
+	for (int j = 0; j<DIGIT_MAX; ++j)
 	{
 		num[j] = (i % 10);
 		i /= 10;
@@ -64,7 +45,7 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 		return -1;
 	else if (negative&&b.negative)
 	{
-		for (int i = MAX - 1; i >= 0; --i)
+		for (int i = DIGIT_MAX - 1; i >= 0; --i)
 		{
 			if (num[i] < b.num[i])
 				return 1;
@@ -73,7 +54,7 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 		}
 		return 0;
 	}
-	for (int i = MAX - 1; i >= 0; --i)
+	for (int i = DIGIT_MAX - 1; i >= 0; --i)
 	{
 		if (num[i] > b.num[i])
 			return 1;
@@ -84,7 +65,7 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 }
 bool BigInt::lessthan(const BigInt &b, int n) const
 {
-	for (int i = MAX - 1; i >= n; --i)
+	for (int i = DIGIT_MAX - 1; i >= n; --i)
 	{
 		if (num[i] < b.num[i - n])
 			return true;
@@ -106,7 +87,7 @@ BigInt BigInt::operator +(const BigInt &b)
 	BigInt tmp(*this);
 	if (compare(0)*b.compare(0) < 0)
 		return tmp - (-b);
-	for (int i = 0; i<MAX; ++i)
+	for (int i = 0; i<DIGIT_MAX; ++i)
 	{
 		tmp.num[i] += b.num[i];
 		if (tmp.num[i]>9)
@@ -130,7 +111,7 @@ BigInt BigInt::operator -(const BigInt &b)
 		return -(-(-b) - tmp);
 	else if (negative&&b.negative)
 		return (-b) - (-tmp);
-	for (int i = 0; i < MAX; ++i)
+	for (int i = 0; i < DIGIT_MAX; ++i)
 	{
 		tmp.num[i] -= b.num[i];
 		int j = i;
@@ -145,7 +126,7 @@ BigInt BigInt::operator -(const BigInt &b)
 }
 BigInt BigInt::operator *(const BigInt &b)
 {
-	int da = MAX - 1, db = MAX - 1;
+	int da = DIGIT_MAX - 1, db = DIGIT_MAX - 1;
 	while (num[da] == 0 && da > 0)
 		--da;
 	while (b.num[db] == 0 && db > 0)
@@ -156,19 +137,19 @@ BigInt BigInt::operator *(const BigInt &b)
 	for (int j = 0; j <= db; ++j)
 	if (num[i] > 0 && b.num[j] > 0)
 	{
-		if (i + j >= MAX)
+		if (i + j >= DIGIT_MAX)
 		{
 			cerr << "multiplication error: too many digits!" << endl;
 			return 0;
 		}
 		tmp.num[i + j] += num[i] * b.num[j];
 	}
-	for (int i = 0; i < MAX - 1 && i <= da + db; ++i)
+	for (int i = 0; i < DIGIT_MAX - 1 && i <= da + db; ++i)
 	{
 		tmp.num[i + 1] += (tmp.num[i] / 10);
 		tmp.num[i] %= 10;
 	}
-	if (tmp.num[MAX - 1] > 9)
+	if (tmp.num[DIGIT_MAX - 1] > 9)
 	{
 		cerr << "multiplication error: too many digits!" << endl;
 		return 0;
@@ -191,7 +172,7 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 		cerr << "cannot solve this division..." << endl;
 		return 0;
 	}
-	int da = MAX - 1, db = MAX - 1;
+	int da = DIGIT_MAX - 1, db = DIGIT_MAX - 1;
 	while (num[da] == 0 && da > 0)
 		--da;
 	while (b.num[db] == 0 && db > 0)
@@ -212,7 +193,7 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 		}
 		quotient.num[i] = j - 1;
 		tmp = divisor*(j - 1);
-		for (int k = MAX - 1; k >= i; --k)
+		for (int k = DIGIT_MAX - 1; k >= i; --k)
 			tmp.num[k] = tmp.num[k - i];
 		for (int k = i - 1; k >= 0; --k)
 			tmp.num[k] = 0;
@@ -232,7 +213,7 @@ BigInt BigInt::operator %(const BigInt &b) //a,b are positive
 		cerr << "cannot solve this complementation..." << endl;
 		return 0;
 	}
-	int da = MAX - 1, db = MAX - 1;
+	int da = DIGIT_MAX - 1, db = DIGIT_MAX - 1;
 	while (num[da] == 0 && da > 0)
 		--da;
 	while (b.num[db] == 0 && db > 0)
@@ -253,7 +234,7 @@ BigInt BigInt::operator %(const BigInt &b) //a,b are positive
 		}
 		quotient.num[i] = j - 1;
 		tmp = divisor*(j - 1);
-		for (int k = MAX - 1; k >= i; --k)
+		for (int k = DIGIT_MAX - 1; k >= i; --k)
 			tmp.num[k] = tmp.num[k - i];
 		for (int k = i - 1; k >= 0; --k)
 			tmp.num[k] = 0;
@@ -268,7 +249,7 @@ BigInt BigInt::bigsqrt()
 		cerr << "cannot solve this sqaure root: n < 0" << endl;
 		return 0;
 	}
-	int digit = MAX - 1;
+	int digit = DIGIT_MAX - 1;
 	while (num[digit] == 0 && digit > 0)
 		--digit;
 
@@ -301,7 +282,7 @@ ostream &operator << (ostream &o, const BigInt &a)
 	if (a.negative)
 		o << '-';
 	bool first = false;
-	for (int i = MAX - 1; i >= 0; --i)
+	for (int i = DIGIT_MAX - 1; i >= 0; --i)
 	{
 		if (a.num[i])
 			first = true;
@@ -312,7 +293,7 @@ ostream &operator << (ostream &o, const BigInt &a)
 		o << 0;
 	return o;
 }
-
+/*
 int main()
 {
 	char s1[5001], s2[5001];
@@ -329,4 +310,4 @@ int main()
 		cout << a%b << endl;
 		cout << a.bigsqrt() << ' ' << b.bigsqrt() << endl;
 	}
-}
+}*/

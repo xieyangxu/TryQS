@@ -1,4 +1,4 @@
-objects = main.o prime_gen.o relation_collect.o
+objects = main.o prime_gen.o relation_collect.o large_integer.o
 cxx = g++
 
 tryqs : $(objects)
@@ -10,6 +10,7 @@ prime_gen.o : prime_gen.cpp env.h prime_gen.h
 	$(cxx) -c prime_gen.cpp -lm
 relation_collect.o : relation_collect.cpp env.h relation_collect.h
 	$(cxx) -c relation_collect.cpp -lm
+large_integer.o : large_integer.cpp large_integer.h
 
 clean :
 	rm -f tryps $(objects)
