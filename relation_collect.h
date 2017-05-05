@@ -4,7 +4,8 @@
 #include "env.h"
 using namespace std;
 
-void gen(long A, int ccnt);
-void collect(long f);
+void gen(long A, int ccnt, int num_prime);
+void collect(long f, int num_relation, int num_prime);
+void print_relation(int num_relation, int num_prime);
 
 #endif
