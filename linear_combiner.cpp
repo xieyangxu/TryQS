@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <iostream>
 #include <time.h>
 #include <set>
 #include <string.h>
+#include "linear_combiner.h"
 using namespace std;
 /*just tool func*/
 void boolxor(bool* t,bool* s, int size){
@@ -17,7 +18,7 @@ void boolxor(bool* t,bool* s, int size){
  */
 bool* linear_combiner()
 {
-    bool *t=(bool *)calloc(sizeof(bool)*D_R);
+    bool *t=(bool *)calloc(D_R, sizeof(bool));
     bool a[D_P+1][D_P]={0};
     bool b[D_P+1][D_P+1]={0};
     set <int> s;
