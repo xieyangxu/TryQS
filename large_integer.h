@@ -2,6 +2,7 @@
 #define LARGE_INTEGER_H
 
 #include <iostream> 
+#include <math.h>
 #define DIGIT_MAX 5000
 //const int MAX = 5000;
 
@@ -27,5 +28,6 @@ public:
 
 	friend ostream &operator << (ostream&, const BigInt&);
 };
+long mygcd(long a,long b);
 
 #endif

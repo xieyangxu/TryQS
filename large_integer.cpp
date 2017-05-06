@@ -293,6 +293,17 @@ ostream &operator << (ostream &o, const BigInt &a)
 		o << 0;
 	return o;
 }
+
+long mygcd(long a,long b)
+{
+    if(a==1||b==1) return 1;
+    if(a==b) return a;
+    if(a<b){
+        long t=a;
+        a=b;b=t;
+    }
+    return mygcd(a-b,b);
+}
 /*
 int main()
 {
