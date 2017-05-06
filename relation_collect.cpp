@@ -5,6 +5,7 @@
 
 bool m[D_R+10][D_P+10];
 long y[D_R+10];
+long r[D_R+10];
 
 void gen(long A, int ccnt, int num_prime) {
 	long remain = A * A - f;
@@ -17,6 +18,7 @@ void gen(long A, int ccnt, int num_prime) {
 		if (remain == 1) break;
 	}
 	y[ccnt] = A;
+    r[ccnt]=remain;
 }
 
 void collect(long f, int num_relation, int num_prime) {
