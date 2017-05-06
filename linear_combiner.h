@@ -3,8 +3,8 @@
 
 #include "env.h"
 
-void boolxor(bool* t,bool* s, int size);
-bool* linear_combiner();
-
+void boolxor(bool* t,bool* s, long size);
+bool* linear_combiner(long DR, long DP);
+void print_combiniation(bool *t, long DR);
 
 #endif
