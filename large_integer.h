@@ -10,13 +10,13 @@ using namespace std;
 
 class BigInt {
 	bool negative;
-	int num[DIGIT_MAX];
+	unsigned num[DIGIT_MAX];
 public:
 	BigInt(const char*);
 	BigInt(int);
 
 	int compare(const BigInt&) const;
-	bool lessthan(const BigInt&, int) const;
+	int kcompare(const BigInt&, int) const;
 	
 	BigInt operator - () const;
 	BigInt operator +(const BigInt&);

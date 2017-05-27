@@ -9,17 +9,17 @@
 
 BigInt::BigInt(const char*s)
 {
-	int i, j;
+	int i = 0, l = strlen(s);
 	memset(num, 0, sizeof(num));
-	for (i = strlen(s) - 1, j = 0; i > 0; --i)
-		num[j++] = s[i] - '0';
 	if (s[0] == '-')
-		negative = true;
-	else
 	{
-		num[j] = s[0] - '0';
-		negative = false;
+		negative = true;
+		++i;
 	}
+	else
+		negative = false;
+	for (; i < l; ++i)
+		num[(l - i - 1) / 3] = num[(l - i - 1) / 3] * 10 + s[i] - '0';
 }
 BigInt::BigInt(int i)
 {
@@ -30,10 +30,10 @@ BigInt::BigInt(int i)
 	}
 	else
 		negative = false;
-	for (int j = 0; j<DIGIT_MAX; ++j)
+	for (int j = 0; j < DIGIT_MAX; ++j)
 	{
-		num[j] = (i % 10);
-		i /= 10;
+		num[j] = (i % 1000);
+		i /= 1000;
 	}
 }
 
@@ -41,9 +41,9 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 {
 	if (!negative&&b.negative)
 		return 1;
-	else if (negative&&!b.negative)
+	if (negative&&!b.negative)
 		return -1;
-	else if (negative&&b.negative)
+	if (negative&&b.negative)
 	{
 		for (int i = DIGIT_MAX - 1; i >= 0; --i)
 		{
@@ -54,25 +54,28 @@ int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 		}
 		return 0;
 	}
-	for (int i = DIGIT_MAX - 1; i >= 0; --i)
+	if (!negative&&!b.negative)
 	{
-		if (num[i] > b.num[i])
-			return 1;
-		if (num[i] < b.num[i])
+		for (int i = DIGIT_MAX - 1; i >= 0; --i)
+		{
+			if (num[i] > b.num[i])
+				return 1;
+			if (num[i] < b.num[i])
+				return -1;
+		}
+		return 0;
+	}
+}
+int BigInt::kcompare(const BigInt &b, int k) const
+{
+	for (int i = DIGIT_MAX - 1; i >= k; --i)
+	{
+		if (num[i] < b.num[i - k])
 			return -1;
+		if (num[i] > b.num[i - k])
+			return 1;
 	}
 	return 0;
-}
-bool BigInt::lessthan(const BigInt &b, int n) const
-{
-	for (int i = DIGIT_MAX - 1; i >= n; --i)
-	{
-		if (num[i] < b.num[i - n])
-			return true;
-		if (num[i] > b.num[i - n])
-			return false;
-	}
-	return false;
 }
 
 BigInt BigInt::operator - () const
@@ -87,12 +90,12 @@ BigInt BigInt::operator +(const BigInt &b)
 	BigInt tmp(*this);
 	if (compare(0)*b.compare(0) < 0)
 		return tmp - (-b);
-	for (int i = 0; i<DIGIT_MAX; ++i)
+	for (int i = 0; i < DIGIT_MAX; ++i)
 	{
 		tmp.num[i] += b.num[i];
-		if (tmp.num[i]>9)
+		if (tmp.num[i]>999)
 		{
-			tmp.num[i] -= 10;
+			tmp.num[i] -= 1000;
 			tmp.num[i + 1]++;
 		}
 	}
@@ -111,14 +114,19 @@ BigInt BigInt::operator -(const BigInt &b)
 		return -(-(-b) - tmp);
 	else if (negative&&b.negative)
 		return (-b) - (-tmp);
+	bool tag = false;
 	for (int i = 0; i < DIGIT_MAX; ++i)
 	{
-		tmp.num[i] -= b.num[i];
-		int j = i;
-		while (tmp.num[j] < 0)
+		if (tmp.num[i] < b.num[i] + tag)
 		{
-			tmp.num[j] += 10;
-			tmp.num[++j]--;
+			tmp.num[i] += 1000;
+			tmp.num[i] -= b.num[i] + tag;
+			tag = true;
+		}
+		else
+		{
+			tmp.num[i] -= b.num[i] + tag;
+			tag = false;
 		}
 	}
 	tmp.negative = false;
@@ -146,10 +154,10 @@ BigInt BigInt::operator *(const BigInt &b)
 	}
 	for (int i = 0; i < DIGIT_MAX - 1 && i <= da + db; ++i)
 	{
-		tmp.num[i + 1] += (tmp.num[i] / 10);
-		tmp.num[i] %= 10;
+		tmp.num[i + 1] += (tmp.num[i] / 1000);
+		tmp.num[i] %= 1000;
 	}
-	if (tmp.num[DIGIT_MAX - 1] > 9)
+	if (tmp.num[DIGIT_MAX - 1] > 999)
 	{
 		cerr << "multiplication error: too many digits!" << endl;
 		return 0;
@@ -183,16 +191,24 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 	BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
 	for (int i = da - db; i >= 0; --i)
 	{
-		int j = 1;
-		while (j < 10)
+		int l = 0, r = 999;
+		while (l < r - 1)
 		{
-			BigInt dtmp = divisor*j;
-			if (remainder.lessthan(dtmp, i))
+			int mid = (l + r) / 2;
+			BigInt dtmp = divisor*mid;
+			int res = remainder.kcompare(dtmp, i);
+			if (res < 0)
+				r = mid;
+			else if (res > 0)
+				l = mid;
+			else
+			{
+				l = mid;
 				break;
-			++j;
+			}
 		}
-		quotient.num[i] = j - 1;
-		tmp = divisor*(j - 1);
+		quotient.num[i] = l;
+		tmp = divisor*l;
 		for (int k = DIGIT_MAX - 1; k >= i; --k)
 			tmp.num[k] = tmp.num[k - i];
 		for (int k = i - 1; k >= 0; --k)
@@ -224,16 +240,24 @@ BigInt BigInt::operator %(const BigInt &b) //a,b are positive
 	BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
 	for (int i = da - db; i >= 0; --i)
 	{
-		int j = 1;
-		while (j < 10)
+		int l = 0, r = 999;
+		while (l < r - 1)
 		{
-			BigInt dtmp = divisor*j;
-			if (remainder.lessthan(dtmp, i))
+			int mid = (l + r) / 2;
+			BigInt dtmp = divisor*mid;
+			int res = remainder.kcompare(dtmp, i);
+			if (res < 0)
+				r = mid;
+			else if (res > 0)
+				l = mid;
+			else
+			{
+				l = mid;
 				break;
-			++j;
+			}
 		}
-		quotient.num[i] = j - 1;
-		tmp = divisor*(j - 1);
+		quotient.num[i] = l;
+		tmp = divisor*l;
 		for (int k = DIGIT_MAX - 1; k >= i; --k)
 			tmp.num[k] = tmp.num[k - i];
 		for (int k = i - 1; k >= 0; --k)
@@ -262,15 +286,23 @@ BigInt BigInt::bigsqrt()
 		for (int j = 0; j <= digit - 2 * i; ++j)
 			partial_remainder.num[j] = remainder.num[2*i + j];
 
-		int k = 1;
-		while (k < 10)
+		int l = 0, r = 999;
+		while (l < r - 1)
 		{
-			if (partial_remainder.compare((partial_ans * 20 + k)*k) < 0)
+			int mid = (l + r) / 2;
+			int res = partial_remainder.compare((partial_ans * 2000 + mid)*mid);
+			if (res < 0)
+				r = mid;
+			else if (res>0)
+				l = mid;
+			else
+			{
+				l = mid;
 				break;
-			++k;
+			}
 		}
-		ans.num[i] = --k;
-		partial_remainder = partial_remainder - (partial_ans * 20 + k)*k;
+		ans.num[i] = l;
+		partial_remainder = partial_remainder - (partial_ans * 2000 + l)*l;
 		for (int j = 0; j <= digit - 2 * i; ++j)
 			remainder.num[2 * i + j] = partial_remainder.num[j];
 	}
@@ -281,16 +313,25 @@ ostream &operator << (ostream &o, const BigInt &a)
 {
 	if (a.negative)
 		o << '-';
-	bool first = false;
-	for (int i = DIGIT_MAX - 1; i >= 0; --i)
+	int i = DIGIT_MAX - 1;
+	for (; i >= 0; --i)
+	if (a.num[i])
+		break;
+	if (i < 0)
 	{
-		if (a.num[i])
-			first = true;
-		if (first)
-			o << a.num[i];
-	}
-	if (!first)
 		o << 0;
+		return o;
+	}
+	o << a.num[i];
+	--i;
+	for (; i >= 0; --i)
+	{
+		if (a.num[i] < 100)
+			o << 0;
+		if (a.num[i] < 10)
+			o << 0;
+		o << a.num[i];
+	}
 	return o;
 }
 
