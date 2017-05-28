@@ -7,6 +7,7 @@
 bool m[D_R+10][D_P+10];
 long y[D_R+10];
 long r[D_R+10];
+long q[D_R+10];
 
 bool pm[D_PR+10][D_P+10];
 long py[D_PR+10];
@@ -32,6 +33,7 @@ void gen(long A, int &ccnt, int num_prime, int &pcnt) {
 	{
 		y[ccnt] = A;
     	r[ccnt] = remain;
+    	q[ccnt] = A * A - f;
     	for (int i = 1; i <= num_prime; ++i)
     	{
     		m[ccnt][i] = temp[i];
@@ -43,8 +45,10 @@ void gen(long A, int &ccnt, int num_prime, int &pcnt) {
 		map<long, int>::iterator it = pi.find(remain);
 		if (it != pi.end()) // exit same remain
 		{
-			y[ccnt] = A;
+			long y2 = py[it->second];
+			y[ccnt] = A * y2;  // save as y1 * y2
     		r[ccnt] = remain;   // save remain^2 as remain
+    		q[ccnt] = (A * A - f) * (y2 * y2 - f);
     		bool *prev = pm[it->second];
     		for (int i = 1; i <= num_prime; ++i)
     		{
@@ -79,24 +83,24 @@ void collect(long f, int num_relation, int num_prime) {
 }
 
 void print_relation(int num_relation, int num_prime, int num_partial) {
-	printf("RTable");
+	printf("RTable    ");
 	for (int i = 1; i <= num_prime; ++i)
 	{
 		printf("%4ld ", p[i]);
 	}
-	printf("   Rem\n");
+	printf("       Rem\n");
 	for (int i = 0; i < num_relation; ++i)
 	{
-		printf("%6ld", y[i]);
+		printf("%10ld", y[i]);
 		for (int j = 1; j <= num_prime; ++j)
 		{
 			printf("%4d ", m[i][j]);
 		}
-		printf("%6ld\n", r[i]);
+		printf("%10ld\n", r[i]);
 	}
 	printf("\n");
 
-	printf("PTable");
+	printf("PTable    ");
 	for (int i = 1; i <= num_prime; ++i)
 	{
 		printf("%4ld ", p[i]);
@@ -104,11 +108,11 @@ void print_relation(int num_relation, int num_prime, int num_partial) {
 	printf("   Rem\n");
 	for (int i = 0; i < num_partial; ++i)
 	{
-		printf("%6ld", py[i]);
+		printf("%10ld", py[i]);
 		for (int j = 1; j <= num_prime; ++j)
 		{
 			printf("%4d ", pm[i][j]);
 		}
-		printf("%6ld\n", pr[i]);
+		printf("%10ld\n", pr[i]);
 	}
 }
