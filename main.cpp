@@ -13,13 +13,17 @@ long f;
 int main(int argc, char const *argv[])
 {
 	//scanf("%ld", f);
-	f = 4033;
+	//f = 4033;
+	f = 991241;
 	prime_gen();
 	//prime_print();
 
-	collect(f, 9, 8);
-	//print_relation(9, 8);
-    bool* t=linear_combiner(9, 8);
+	collect(f, 50, 30);
+	//void collect(long f, int num_relation, int num_prime);
+	print_relation(50, 30, 100);
+	//void print_relation(int num_relation, int num_prime, int num_partial);
+
+    /*bool* t=linear_combiner(9, 8);
     if(t==NULL){
         printf("failure\n");
         return 0;
@@ -41,6 +45,6 @@ int main(int argc, char const *argv[])
     }
     printf("success!%ld=%ld*%ld\n",f,gcd,f/gcd);
     
-    free(t);
+    free(t);*/
 	return 0;
 }

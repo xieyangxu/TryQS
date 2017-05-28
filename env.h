@@ -1,8 +1,9 @@
 #ifndef ENV_H
 #define ENV_H
 
-#define D_P 100  // Dimension of primes
-#define D_R 100	// Dimension of relations
+#define D_P 1000  // Dimension of primes
+#define D_R 1000	// Dimension of relations
+#define D_PR 1000 // Dimension of partial relations
 using namespace std;
 
 extern long p[D_P+10]; 			// Prime table
