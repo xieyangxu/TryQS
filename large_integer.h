@@ -18,6 +18,7 @@ public:
 	BigInt();
 	BigInt(const char*);
 	BigInt(int);
+	BigInt(long);
 	
 	bool operator == (const BigInt &) const;
 	bool operator != (const BigInt &) const;

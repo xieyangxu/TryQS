@@ -41,6 +41,21 @@ BigInt::BigInt(int i)
 		i /= 1000;
 	}
 }
+BigInt::BigInt(long i)
+{
+	if (i < 0)
+	{
+		negative = true;
+		i = -i;
+	}
+	else
+		negative = false;
+	for (int j = 0; j < DIGIT_MAX; ++j)
+	{
+		num[j] = (i % 1000);
+		i /= 1000;
+	}
+}
 
 int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
 {
@@ -361,19 +376,13 @@ ostream &operator << (ostream &o, const BigInt &a)
 
 BigInt biggcd(BigInt a,BigInt b)
 {
-	if (a == 1)
-		return a;
-	if (b == 1)
+	if (a == 0)
 		return b;
-	if (a == b)
+	if (b == 0)
 		return a;
 	if (a < b)
-	{
-		BigInt tmp = a;
-		a = b;
-		b = tmp;
-	}
-    return biggcd(a-b, b);
+		return biggcd(b%a, a);
+    return biggcd(a%b, b);
 }
 /*
 int main()
