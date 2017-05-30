@@ -18,7 +18,8 @@ void boolxor(bool* t,bool* s, long size){
  */
 bool* linear_combiner(long DR, long DP)
 {
-    bool *t=(bool *)calloc(D_R, sizeof(bool));
+    printf("linear combining...\n");
+    bool *t=(bool *)calloc(DR, sizeof(bool));
     bool a[D_P+1][D_P]={0};
     bool b[D_P+1][D_P+1]={0};
     long setsize=1;
@@ -30,14 +31,13 @@ bool* linear_combiner(long DR, long DP)
             }
         }
     }
+    printf("setsize = %ld\n",setsize);
     set <int> s;
-    srand((unsigned)time(NULL));
     set<int>::iterator it;
     int c=0;
     while(s.size()<setsize){
         int randnum=rand()%DR;
-        if(r[randnum]==1)
-            s.insert(randnum);
+        s.insert(randnum);
     }
     for(it=s.begin();it!=s.end();++it,++c){
         b[c][c]=1;
@@ -81,12 +81,13 @@ bool* linear_combiner(long DR, long DP)
 }
 void print_combiniation(bool *t, long DR)
 {
+    printf("t = (");
     for(int i=0; i<DR; ++i){
         if(t[i]){
             printf("1 ");
         }
         else printf("0 ");
     }
-    printf("\n");
+    printf(")\n");
     return;
 }
