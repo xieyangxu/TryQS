@@ -4,7 +4,7 @@
 #include <time.h>
 #include "myresolve.h"
 using namespace std;
-bool myresolve(long f, long DR, long DP, long trynum){
+bool myresolve(BigInt f, long DR, long DP, long trynum){
     srand((unsigned)time(NULL));
     while(trynum--){
         bool* t=linear_combiner(DR, DP);
@@ -14,27 +14,23 @@ bool myresolve(long f, long DR, long DP, long trynum){
             continue;
         }
         print_combiniation(t, DP);
-        long A=1,B=1;
+        BigInt A=1,B=1;
         for(int i=0;i<DR;++i){
             if(t[i]){
-                A*=y[i];
-                B*=q[i];
+                A=A*y[i];
+                B=B*q[i];
             }
         }
-        B=(long)sqrt(double(B));
-        printf("A=%ld,B=%ld\n",A,B);
-        if(A<0||B<0){
-            printf("failure: type long overflow \n");
-            free(t);
-            continue;
-        }
-        long gcd=mygcd(A-B,f);
+        B=B.bigsqrt();
+        cout<<"A="<<A<<",B="<<B<<endl;
+
+        BigInt gcd=biggcd(A-B,f);
         if(gcd==1||gcd==f){
             printf("failure: ordinary prime fector \n");
             free(t);
             continue;
         }
-        printf("success!%ld=%ld*%ld\n",f,gcd,f/gcd);
+        cout<<"success!"<<f<<'='<<gcd<<'*'<<f/gcd<<endl;
         free(t);
         return 1;
     }

@@ -6,7 +6,12 @@
 //using namespace std;
 
 
-
+BigInt::BigInt()
+{
+	negative = false;
+	for (int i = 0; i < DIGIT_MAX; ++i)
+		num[i] = 0;
+}
 BigInt::BigInt(const char*s)
 {
 	int i = 0, l = strlen(s);
@@ -78,10 +83,29 @@ int BigInt::kcompare(const BigInt &b, int k) const
 	return 0;
 }
 
+bool BigInt::operator == (const BigInt &b) const
+{
+	if (compare(b) == 0)
+		return true;
+	return false;
+}
+bool BigInt::operator != (const BigInt &b) const
+{
+	if (compare(b) == 0)
+		return false;
+	return true;
+}
+bool BigInt::operator < (const BigInt &b) const
+{
+	if (compare(b) < 0)
+		return true;
+	return false;
+}
+
 BigInt BigInt::operator - () const
 {
 	BigInt tmp(*this);
-	if (tmp.compare(0) != 0)
+	if (tmp != 0)
 		tmp.negative = !negative;
 	return tmp;
 }
@@ -170,12 +194,12 @@ BigInt BigInt::operator *(const BigInt &b)
 }
 BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 {
-	if (b.compare(0) == 0)
+	if (b == 0)
 	{
 		cerr << "cannot divided by 0!" << endl;
 		return 0;
 	}
-	if (compare(0)<0 || b.compare(0)<0)
+	if (compare(0)<0 || b<0)
 	{
 		cerr << "cannot solve this division..." << endl;
 		return 0;
@@ -219,12 +243,12 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 }
 BigInt BigInt::operator %(const BigInt &b) //a,b are positive
 {
-	if (b.compare(0) == 0)
+	if (b == 0)
 	{
 		cerr << "cannot divided by 0!" << endl;
 		return 0;
 	}
-	if (compare(0)<0 || b.compare(0)<0)
+	if (compare(0)<0 || b<0)
 	{
 		cerr << "cannot solve this complementation..." << endl;
 		return 0;
@@ -335,15 +359,21 @@ ostream &operator << (ostream &o, const BigInt &a)
 	return o;
 }
 
-long mygcd(long a,long b)
+BigInt biggcd(BigInt a,BigInt b)
 {
-    if(a==1||b==1) return 1;
-    if(a==b) return a;
-    if(a<b){
-        long t=a;
-        a=b;b=t;
-    }
-    return mygcd(a-b,b);
+	if (a == 1)
+		return a;
+	if (b == 1)
+		return b;
+	if (a == b)
+		return a;
+	if (a < b)
+	{
+		BigInt tmp = a;
+		a = b;
+		b = tmp;
+	}
+    return biggcd(a-b, b);
 }
 /*
 int main()

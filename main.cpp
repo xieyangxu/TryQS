@@ -10,12 +10,10 @@
 
 
 
-long f;	
+BigInt f("991241");	
 
 int main(int argc, char const *argv[])
 {
-	
-	f = 991241;
 	prime_gen();
 	//prime_print();
 
