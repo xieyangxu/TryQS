@@ -11,13 +11,13 @@ using namespace std;
 class BigInt {
 	bool negative;
 	unsigned num[DIGIT_MAX];
+
+	int compare(const BigInt&) const;
+	int kcompare(const BigInt&, int) const;
 public:
 	BigInt();
 	BigInt(const char*);
 	BigInt(int);
-
-	int compare(const BigInt&) const;
-	int kcompare(const BigInt&, int) const;
 	
 	bool operator == (const BigInt &) const;
 	bool operator != (const BigInt &) const;
