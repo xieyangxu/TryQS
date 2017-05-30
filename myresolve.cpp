@@ -23,6 +23,11 @@ bool myresolve(long f, long DR, long DP, long trynum){
         }
         B=(long)sqrt(double(B));
         printf("A=%ld,B=%ld\n",A,B);
+        if(A<0||B<0){
+            printf("failure: type long overflow \n");
+            free(t);
+            continue;
+        }
         long gcd=mygcd(A-B,f);
         if(gcd==1||gcd==f){
             printf("failure: ordinary prime fector \n");
