@@ -2,7 +2,7 @@
 #define ENV_H
 
 #include "large_integer.h"
-
+#include <time.h>
 #define D_P 1000  // Dimension of primes
 #define D_R 500	// Dimension of relations
 #define D_PR 100000 // Dimension of partial relations
@@ -14,5 +14,6 @@ extern BigInt y[D_R+10];			// Y table for each relation (y[i]^2 is factored in m
 extern BigInt r[D_R+10];          // Remain number table of factor
 extern BigInt q[D_R+10];
 extern BigInt f;					// Number to factor
-
+extern time_t start_time;
+extern time_t cur_time;
 #endif
