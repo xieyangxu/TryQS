@@ -16,4 +16,6 @@ extern BigInt q[D_R+10];
 extern BigInt f;					// Number to factor
 extern time_t start_time;
 extern time_t cur_time;
+extern clock_t start_time_ms;
+extern clock_t cur_time_ms;
 #endif
