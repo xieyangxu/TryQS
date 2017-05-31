@@ -1,7 +1,7 @@
 objects = main.o prime_gen.o relation_collect.o large_integer.o \
 	linear_combiner.o myresolve.o
 cxx = g++
-g = -g -O1
+g = -g -Ofast
 
 tryqs : $(objects)
 	$(cxx) -o tryqs $(objects)
