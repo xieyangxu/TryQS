@@ -9,7 +9,7 @@
 using namespace std;
 
 class BigInt {
-	bool negative;
+	bool valid, negative;
 	unsigned long long num[DIGIT_MAX];
 
 	int compare(const BigInt&) const;

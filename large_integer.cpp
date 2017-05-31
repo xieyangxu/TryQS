@@ -8,12 +8,14 @@
 
 BigInt::BigInt()
 {
+	valid = true;
 	negative = false;
 	for (int i = 0; i < DIGIT_MAX; ++i)
 		num[i] = 0;
 }
 BigInt::BigInt(const char*s)
 {
+	valid = true;
 	int i = 0, l = strlen(s);
 	memset(num, 0, sizeof(num));
 	if (s[0] == '-')
@@ -28,6 +30,7 @@ BigInt::BigInt(const char*s)
 }
 BigInt::BigInt(int i)
 {
+	valid = true;
 	if (i < 0)
 	{
 		negative = true;
@@ -45,6 +48,7 @@ BigInt::BigInt(int i)
 }
 BigInt::BigInt(long i)
 {
+	valid = true;
 	if (i < 0)
 	{
 		negative = true;
@@ -196,8 +200,10 @@ BigInt BigInt::operator *(const BigInt &b)
 	{
 		if (i + j >= DIGIT_MAX)
 		{
+			tmp = 0;
+			tmp.valid = false;
 			cerr << "multiplication error: too many digits!" <<i<<' '<<j<< endl;
-			return 0;
+			return tmp;
 		}
 		tmp.num[i + j] += num[i] * b.num[j];
 	}
@@ -208,8 +214,10 @@ BigInt BigInt::operator *(const BigInt &b)
 	}
 	if (tmp.num[DIGIT_MAX - 1] > 99999999)
 	{
+		tmp = 0;
+		tmp.valid = false;
 		cerr << "multiplication error: too many digits!" << endl;
-		return 0;
+		return tmp;
 	}
 	if (compare(0)*b.compare(0) >= 0)
 		tmp.negative = false;
