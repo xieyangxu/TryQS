@@ -10,7 +10,8 @@
 #include <math.h>
 time_t start_time;
 time_t cur_time;
-
+clock_t start_time_ms;
+clock_t cur_time_ms;
 
 BigInt f("0");
 int main(int argc, char const *argv[])
@@ -25,13 +26,20 @@ int main(int argc, char const *argv[])
         cin>>s>>DR>>DP;
         cout<<"case "<<i<<":"<<endl<<"f = "<<s<<" DR = "<<DR<<" DP = "<<DP<<endl;
         f = BigInt(s.c_str());
+        start_time_ms=clock();
         //prime_print();
         collect(f, DR, DP);
+        cur_time_ms=clock();
+        printf("collect time = %ld ms\n",(cur_time_ms-start_time_ms)/1000);
+        start_time_ms=cur_time_ms;
         //void collect(long f, int num_relation, int num_prime);
         //print_relation(D_R, D_P, 0);
         //void print_relation(int num_relation, int num_prime, int num_partial);
 
-        myresolve(f,DR,DP,100);
+        myresolve(f,DR,DP,1000);
+        cur_time_ms=clock();
+        printf("combine time = %ld ms\n\n",(cur_time_ms-start_time_ms)/1000);
+        
     }
 	return 0;
 }
