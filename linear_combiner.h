@@ -4,7 +4,7 @@
 #include "env.h"
 
 void boolxor(bool* t,bool* s, long size);
-bool* linear_combiner(long DR, long DP);
+bool* linear_combiner(long DR, long DP, long setsize);
 void print_combiniation(bool *t, long DR);
 
 #endif

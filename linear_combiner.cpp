@@ -16,22 +16,12 @@ void boolxor(bool* t,bool* s, long size){
  the func will return an address of a bool-type array
  for we will use the function calloc, don't foget to free the array then
  */
-bool* linear_combiner(long DR, long DP)
+bool* linear_combiner(long DR, long DP, long setsize)
 {
-    printf("linear combining...\n");
+    //printf("linear combining...\n");
     bool *t=(bool *)calloc(DR, sizeof(bool));
     bool a[D_P+1][D_P]={0};
     bool b[D_P+1][D_P+1]={0};
-    long setsize=1;
-    for(int i=0;i<DP;++i){
-        for(int j=0;j<DR;++j){
-            if(m[j][i]==1){
-                setsize++;
-                break;
-            }
-        }
-    }
-    printf("setsize = %ld\n",setsize);
     set <int> s;
     set<int>::iterator it;
     int c=0;
