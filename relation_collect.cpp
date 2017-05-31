@@ -1,6 +1,8 @@
 #include <cmath>
 #include <cstdio>
 #include <map>
+#include <string.h>
+#include <time.h>
 #include "env.h"
 #include "relation_collect.h"
 
@@ -14,6 +16,9 @@ BigInt py[D_PR+10];
 BigInt pr[D_PR+10];
 
 map<BigInt, int> pi;
+
+time_t start_time;
+time_t cur_time;
 
 void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 	BigInt remain = A * A - f;
@@ -34,10 +39,15 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 		y[ccnt] = A;
     	r[ccnt] = remain;
     	q[ccnt] = A * A - f;
-    	for (int i = 1; i <= num_prime; ++i)
+    	/*for (int i = 1; i <= num_prime; ++i)
     	{
     		m[ccnt][i] = temp[i];
-    	}
+    	}*/
+        memcpy(m[ccnt],temp,(num_prime+1)*sizeof(bool));
+        cur_time=time(NULL);
+        printf("%02ld:%02ld:%02ld  vector %d got\n",
+               (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
+        fflush(stdout);
     	ccnt++;
 	}
 	else //partial
@@ -52,18 +62,24 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
     		bool *prev = pm[it->second];
     		for (int i = 1; i <= num_prime; ++i)
     		{
-    			m[ccnt][i] = temp[i] ^ prev[i];
+    			temp[i] ^= prev[i];
     		}
+            memcpy(m[ccnt],temp,(num_prime+1)*sizeof(bool));
+            cur_time=time(NULL);
+            printf("%02ld:%02ld:%02ld  vector %d got\n",
+                   (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
+            fflush(stdout);
     		ccnt++;
 		}
 		else // new remain
 		{
 			py[pcnt] = A;
 			pr[pcnt] = remain;
-			for (int i = 1; i <= num_prime; ++i)
+			/*for (int i = 1; i <= num_prime; ++i)
 			{
 				pm[pcnt][i] = temp[i];
-			}
+			}*/
+            memcpy(pm[pcnt],temp,(num_prime+1)*sizeof(bool));
 			pi.insert(pair<BigInt, int>(remain, pcnt));
 			pcnt++;
 		}
@@ -71,7 +87,9 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 }
 
 void collect(BigInt f, int num_relation, int num_prime) {
-	BigInt A = f.bigsqrt() + 1;
+    printf("collect begin\n");
+    start_time = time(NULL);
+    BigInt A = f.bigsqrt() + 1;
 	int ccnt = 0;
 	int pcnt = 0;
 
@@ -80,6 +98,7 @@ void collect(BigInt f, int num_relation, int num_prime) {
 		A=A+1;
 		//ccnt++;
 	}
+    printf("\ncollect finished\n");
 }
 
 void print_relation(int num_relation, int num_prime, int num_partial) {

@@ -4,8 +4,8 @@
 #include "large_integer.h"
 
 #define D_P 1000  // Dimension of primes
-#define D_R 1000	// Dimension of relations
-#define D_PR 1000 // Dimension of partial relations
+#define D_R 500	// Dimension of relations
+#define D_PR 100000 // Dimension of partial relations
 using namespace std;
 
 extern long p[D_P+10]; 			// Prime table

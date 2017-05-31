@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include "prime_gen.h"
 
 long p[D_P+10];
@@ -26,7 +27,8 @@ void prime_gen() {
 }
 
 void prime_print() {
-	for (int i = 0; i < D_P/10; ++i)
+	//freopen("/Users/shenqianli/Desktop/p.txt","w",stdout);
+    for (int i = 0; i < D_P/10; ++i)
 	{
 		for (int j = 1; j <= 10; ++j)
 		{

@@ -1,5 +1,5 @@
 #ifndef PRIME_GEN_H
-#define PRIME_GEM_H
+#define PRIME_GEN_H
 
 #include "env.h"
 
