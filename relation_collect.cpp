@@ -17,9 +17,18 @@ BigInt pr[D_PR+10];
 
 map<BigInt, int> pi;
 
-time_t start_time;
-time_t cur_time;
 
+void init(){
+    memset(m,0,sizeof(m));
+    memset(y,0,sizeof(y));
+    memset(r,0,sizeof(r));
+    memset(q,0,sizeof(q));
+    memset(pm,0,sizeof(pm));
+    memset(py,0,sizeof(py));
+    memset(pr,0,sizeof(pr));
+    pi.clear();
+    start_time = time(NULL);
+}
 void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 	BigInt remain = A * A - f;
 	bool *temp = new bool[D_P+10]();
@@ -88,7 +97,7 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 
 void collect(BigInt f, int num_relation, int num_prime) {
     printf("collect begin\n");
-    start_time = time(NULL);
+    init();
     BigInt A = f.bigsqrt() + 1;
 	int ccnt = 0;
 	int pcnt = 0;
