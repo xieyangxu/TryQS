@@ -52,6 +52,6 @@ bool myresolve(BigInt f, long DR, long DP, long trynum){
         success_cnt++;
         free(t);
     }
-    printf("success : %d, failure : %d\n\n",success_cnt,failure_cnt);
+    printf("success : %d, failure : %d\n",success_cnt,failure_cnt);
     return 0;
 }
