@@ -24,7 +24,7 @@ BigInt::BigInt(const char*s)
 	else
 		negative = false;
 	for (; i < l; ++i)
-		num[(l - i - 1) / 3] = num[(l - i - 1) / 3] * 10 + s[i] - '0';
+		num[(l - i - 1) / 8] = num[(l - i - 1) / 8] * 10 + s[i] - '0';
 }
 BigInt::BigInt(int i)
 {
@@ -35,11 +35,13 @@ BigInt::BigInt(int i)
 	}
 	else
 		negative = false;
-	for (int j = 0; j < DIGIT_MAX; ++j)
+	for (int j = 0; j < 3; ++j)
 	{
-		num[j] = (i % 1000);
-		i /= 1000;
+		num[j] = (i % 100000000);
+		i /= 100000000;
 	}
+	for (int j = 3; j < DIGIT_MAX; ++j)
+		num[j] = 0;
 }
 BigInt::BigInt(long i)
 {
@@ -50,11 +52,13 @@ BigInt::BigInt(long i)
 	}
 	else
 		negative = false;
-	for (int j = 0; j < DIGIT_MAX; ++j)
+	for (int j = 0; j < 3; ++j)
 	{
-		num[j] = (i % 1000);
-		i /= 1000;
+		num[j] = (i % 100000000);
+		i /= 100000000;
 	}
+	for (int j = 3; j < DIGIT_MAX; ++j)
+		num[j] = 0;
 }
 
 int BigInt::compare(const BigInt &b) const //>:1 ; =:0 ; <:-1
@@ -100,15 +104,21 @@ int BigInt::kcompare(const BigInt &b, int k) const
 
 bool BigInt::operator == (const BigInt &b) const
 {
-	if (compare(b) == 0)
-		return true;
-	return false;
+	if (negative^b.negative)
+		return false;
+	for (int i = 0; i < DIGIT_MAX; ++i)
+	if (num[i] != b.num[i])
+		return false;
+	return true;
 }
 bool BigInt::operator != (const BigInt &b) const
 {
-	if (compare(b) == 0)
-		return false;
-	return true;
+	if (negative^b.negative)
+		return true;
+	for (int i = 0; i < DIGIT_MAX; ++i)
+	if (num[i] != b.num[i])
+		return true;
+	return false;
 }
 bool BigInt::operator < (const BigInt &b) const
 {
@@ -132,9 +142,9 @@ BigInt BigInt::operator +(const BigInt &b)
 	for (int i = 0; i < DIGIT_MAX; ++i)
 	{
 		tmp.num[i] += b.num[i];
-		if (tmp.num[i]>999)
+		if (tmp.num[i]>99999999)
 		{
-			tmp.num[i] -= 1000;
+			tmp.num[i] -= 100000000;
 			tmp.num[i + 1]++;
 		}
 	}
@@ -158,7 +168,7 @@ BigInt BigInt::operator -(const BigInt &b)
 	{
 		if (tmp.num[i] < b.num[i] + tag)
 		{
-			tmp.num[i] += 1000;
+			tmp.num[i] += 100000000;
 			tmp.num[i] -= b.num[i] + tag;
 			tag = true;
 		}
@@ -186,17 +196,17 @@ BigInt BigInt::operator *(const BigInt &b)
 	{
 		if (i + j >= DIGIT_MAX)
 		{
-			cerr << "multiplication error: too many digits!" << endl;
+			cerr << "multiplication error: too many digits!" <<i<<' '<<j<< endl;
 			return 0;
 		}
 		tmp.num[i + j] += num[i] * b.num[j];
 	}
 	for (int i = 0; i < DIGIT_MAX - 1 && i <= da + db; ++i)
 	{
-		tmp.num[i + 1] += (tmp.num[i] / 1000);
-		tmp.num[i] %= 1000;
+		tmp.num[i + 1] += (tmp.num[i] / 100000000);
+		tmp.num[i] %= 100000000;
 	}
-	if (tmp.num[DIGIT_MAX - 1] > 999)
+	if (tmp.num[DIGIT_MAX - 1] > 99999999)
 	{
 		cerr << "multiplication error: too many digits!" << endl;
 		return 0;
@@ -230,7 +240,7 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
 	BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
 	for (int i = da - db; i >= 0; --i)
 	{
-		int l = 0, r = 999;
+		int l = 0, r = 99999999;
 		while (l < r - 1)
 		{
 			int mid = (l + r) / 2;
@@ -279,7 +289,7 @@ BigInt BigInt::operator %(const BigInt &b) //a,b are positive
 	BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
 	for (int i = da - db; i >= 0; --i)
 	{
-		int l = 0, r = 999;
+		int l = 0, r = 99999999;
 		while (l < r - 1)
 		{
 			int mid = (l + r) / 2;
@@ -325,11 +335,11 @@ BigInt BigInt::bigsqrt()
 		for (int j = 0; j <= digit - 2 * i; ++j)
 			partial_remainder.num[j] = remainder.num[2*i + j];
 
-		int l = 0, r = 999;
+		int l = 0, r = 99999999;
 		while (l < r - 1)
 		{
 			int mid = (l + r) / 2;
-			int res = partial_remainder.compare((partial_ans * 2000 + mid)*mid);
+			int res = partial_remainder.compare((partial_ans * 200000000 + mid)*mid);
 			if (res < 0)
 				r = mid;
 			else if (res>0)
@@ -341,7 +351,7 @@ BigInt BigInt::bigsqrt()
 			}
 		}
 		ans.num[i] = l;
-		partial_remainder = partial_remainder - (partial_ans * 2000 + l)*l;
+		partial_remainder = partial_remainder - (partial_ans * 200000000 + l)*l;
 		for (int j = 0; j <= digit - 2 * i; ++j)
 			remainder.num[2 * i + j] = partial_remainder.num[j];
 	}
@@ -365,6 +375,16 @@ ostream &operator << (ostream &o, const BigInt &a)
 	--i;
 	for (; i >= 0; --i)
 	{
+		if (a.num[i] < 10000000)
+			o << 0;
+		if (a.num[i] < 1000000)
+			o << 0;
+		if (a.num[i] < 100000)
+			o << 0;
+		if (a.num[i] < 10000)
+			o << 0;
+		if (a.num[i] < 1000)
+			o << 0;
 		if (a.num[i] < 100)
 			o << 0;
 		if (a.num[i] < 10)

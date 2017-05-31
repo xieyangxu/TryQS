@@ -3,14 +3,14 @@
 
 #include <iostream> 
 #include <math.h>
-#define DIGIT_MAX 5000
-//const int MAX = 5000;
+#define DIGIT_MAX 3000
+//const int MAX = 3000;
 
 using namespace std;
 
 class BigInt {
 	bool negative;
-	unsigned num[DIGIT_MAX];
+	unsigned long long num[DIGIT_MAX];
 
 	int compare(const BigInt&) const;
 	int kcompare(const BigInt&, int) const;
