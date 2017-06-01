@@ -10,7 +10,7 @@ bool myresolve(BigInt f, long DR, long DP, long trynum){
     int success_cnt=0;
     int failure_cnt=0;
     long setsize=1;
-    for(int i=0;i<DP;++i){
+    for(int i=1;i<=DP;++i){
         for(int j=0;j<DR;++j){
             if(m[j][i]==1){
                 setsize++;
