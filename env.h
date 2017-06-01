@@ -18,4 +18,6 @@ extern time_t start_time;
 extern time_t cur_time;
 extern clock_t start_time_ms;
 extern clock_t cur_time_ms;
+extern long cursetsize;
+extern float Alpha;
 #endif
