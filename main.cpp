@@ -20,8 +20,8 @@ int main(int argc, char const *argv[])
     string s;
     s.resize(100);
     prime_gen();
-    freopen("case.txt","r",stdin);
-    freopen("result.txt","w",stdout);
+    freopen("case3.txt","r",stdin);
+    freopen("result3.txt","w",stdout);
     for(int i=0;i<24;++i){
         cin>>s>>DR>>DP>>Alpha;
         cout<<"case "<<i<<":"<<endl<<"f = "<<s<<" DR = "<<DR<<" DP = "<<DP<<" Alpha = "<<Alpha<<endl;

@@ -59,8 +59,17 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
                (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
         fflush(stdout);
     	ccnt++;
-	}
-	else //partial
+        cursetsize=1;
+        for(int i=0;i<num_prime;++i){
+            for(int j=0;j<ccnt;++j){
+                if(m[j][i]==1){
+                    cursetsize++;
+                    break;
+                }
+            }
+        }
+    }
+    else //partial
 	{
 		map<BigInt, int>::iterator it = pi.find(remain);
 		if (it != pi.end()) // exit same remain
@@ -80,8 +89,17 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
                    (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
             fflush(stdout);
     		ccnt++;
-		}
-		else // new remain
+            cursetsize=1;
+            for(int i=0;i<num_prime;++i){
+                for(int j=0;j<ccnt;++j){
+                    if(m[j][i]==1){
+                        cursetsize++;
+                        break;
+                    }
+                }
+            }
+        }
+        else // new remain
 		{
 			py[pcnt] = A;
 			pr[pcnt] = remain;
@@ -106,15 +124,6 @@ void collect(BigInt f, int num_relation, int num_prime, float alpha) {
 	while (ccnt <= alpha*cursetsize && ccnt <= num_prime) {
 		gen(A, ccnt, num_prime, pcnt);
 		A=A+1;
-        cursetsize=1;
-        for(int i=0;i<num_prime;++i){
-            for(int j=0;j<ccnt;++j){
-                if(m[j][i]==1){
-                    cursetsize++;
-                    break;
-                }
-            }
-        }
 	}
     printf("\ncollect finished\n");
 }
