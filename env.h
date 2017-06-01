@@ -4,7 +4,7 @@
 #include "large_integer.h"
 #include <time.h>
 #define D_P 1000  // Dimension of primes
-#define D_R 500	// Dimension of relations
+#define D_R 1000	// Dimension of relations
 #define D_PR 100000 // Dimension of partial relations
 using namespace std;
 
