@@ -16,6 +16,7 @@ BigInt py[D_PR+10];
 BigInt pr[D_PR+10];
 
 map<BigInt, int> pi;
+bool o[D_P+10];
 long cursetsize;
 
 void init(){
@@ -26,6 +27,8 @@ void init(){
     memset(pm,0,sizeof(pm));
     memset(py,0,sizeof(py));
     memset(pr,0,sizeof(pr));
+    memset(o,0,sizeof(o));
+    cursetsize=1;
     pi.clear();
     start_time = time(NULL);
     cursetsize=100000;
@@ -54,20 +57,17 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
     		m[ccnt][i] = temp[i];
     	}*/
         memcpy(m[ccnt],temp,(num_prime+1)*sizeof(bool));
+        for(int i=1;i<=num_prime;++i){
+            if(temp[i]==1&&o[i]==0){
+                o[i]=1;
+                cursetsize++;
+            }
+        }
         cur_time=time(NULL);
         printf("%02ld:%02ld:%02ld  vector %d got\n",
                (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
         fflush(stdout);
     	ccnt++;
-        cursetsize=1;
-        for(int i=0;i<num_prime;++i){
-            for(int j=0;j<ccnt;++j){
-                if(m[j][i]==1){
-                    cursetsize++;
-                    break;
-                }
-            }
-        }
     }
     else //partial
 	{
@@ -84,20 +84,17 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
     			temp[i] ^= prev[i];
     		}
             memcpy(m[ccnt],temp,(num_prime+1)*sizeof(bool));
+            for(int i=1;i<=num_prime;++i){
+                if(temp[i]==1&&o[i]==0){
+                    o[i]=1;
+                    cursetsize++;
+                }
+            }
             cur_time=time(NULL);
             printf("%02ld:%02ld:%02ld  vector %d got\n",
                    (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
             fflush(stdout);
     		ccnt++;
-            cursetsize=1;
-            for(int i=0;i<num_prime;++i){
-                for(int j=0;j<ccnt;++j){
-                    if(m[j][i]==1){
-                        cursetsize++;
-                        break;
-                    }
-                }
-            }
         }
         else // new remain
 		{
@@ -121,7 +118,7 @@ void collect(BigInt f, int num_relation, int num_prime, float alpha) {
 	int ccnt = 0;
 	int pcnt = 0;
 
-	while (ccnt <= alpha*cursetsize && ccnt <= num_prime) {
+	while (ccnt <= alpha*cursetsize && ccnt <= num_relation) {
 		gen(A, ccnt, num_prime, pcnt);
 		A=A+1;
 	}
