@@ -16,7 +16,7 @@ BigInt py[D_PR+10];
 BigInt pr[D_PR+10];
 
 map<BigInt, int> pi;
-
+long cursetsize;
 
 void init(){
     memset(m,0,sizeof(m));
@@ -28,6 +28,7 @@ void init(){
     memset(pr,0,sizeof(pr));
     pi.clear();
     start_time = time(NULL);
+    cursetsize=100000;
 }
 void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 	BigInt remain = A * A - f;
@@ -95,17 +96,25 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 	}
 }
 
-void collect(BigInt f, int num_relation, int num_prime) {
+void collect(BigInt f, int num_relation, int num_prime, float alpha) {
     printf("collect begin\n");
     init();
     BigInt A = f.bigsqrt() + 1;
 	int ccnt = 0;
 	int pcnt = 0;
 
-	while (ccnt < num_relation) {
+	while (ccnt <= alpha*cursetsize && ccnt <= num_prime) {
 		gen(A, ccnt, num_prime, pcnt);
 		A=A+1;
-		//ccnt++;
+        cursetsize=1;
+        for(int i=0;i<num_prime;++i){
+            for(int j=0;j<ccnt;++j){
+                if(m[j][i]==1){
+                    cursetsize++;
+                    break;
+                }
+            }
+        }
 	}
     printf("\ncollect finished\n");
 }

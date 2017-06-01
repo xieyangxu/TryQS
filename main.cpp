@@ -12,7 +12,7 @@ time_t start_time;
 time_t cur_time;
 clock_t start_time_ms;
 clock_t cur_time_ms;
-
+float Alpha=1.2;
 BigInt f("0");
 int main(int argc, char const *argv[])
 {
@@ -23,12 +23,12 @@ int main(int argc, char const *argv[])
     freopen("case.txt","r",stdin);
     freopen("result.txt","w",stdout);
     for(int i=0;i<24;++i){
-        cin>>s>>DR>>DP;
-        cout<<"case "<<i<<":"<<endl<<"f = "<<s<<" DR = "<<DR<<" DP = "<<DP<<endl;
+        cin>>s>>DR>>DP>>Alpha;
+        cout<<"case "<<i<<":"<<endl<<"f = "<<s<<" DR = "<<DR<<" DP = "<<DP<<" Alpha = "<<Alpha<<endl;
         f = BigInt(s.c_str());
         start_time_ms=clock();
         //prime_print();
-        collect(f, DR, DP);
+        collect(f, DR, DP, Alpha);
         cur_time_ms=clock();
         printf("collect time = %ld ms\n",(cur_time_ms-start_time_ms)/1000);
         start_time_ms=cur_time_ms;

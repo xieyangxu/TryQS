@@ -20,8 +20,8 @@ bool* linear_combiner(long DR, long DP, long setsize)
 {
     //printf("linear combining...\n");
     bool *t=(bool *)calloc(DR, sizeof(bool));
-    bool a[D_P+1][D_P]={0};
-    bool b[D_P+1][D_P+1]={0};
+    bool a[D_P+10][D_P]={0};
+    bool b[D_P+10][D_P+10]={0};
     set <int> s;
     set<int>::iterator it;
     int c=0;
