@@ -3,6 +3,8 @@
 
 #include "large_integer.h"
 #include <time.h>
+#include <set>
+#include <stack>
 #define D_P 1000  // Dimension of primes
 #define D_R 1000	// Dimension of relations
 #define D_PR 100000 // Dimension of partial relations
@@ -20,4 +22,6 @@ extern clock_t start_time_ms;
 extern clock_t cur_time_ms;
 extern long cursetsize;
 extern float Alpha;
+extern multiset<BigInt> rs;
+extern stack<BigInt> ns;
 #endif

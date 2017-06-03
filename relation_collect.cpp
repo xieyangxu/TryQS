@@ -30,8 +30,6 @@ void init(){
     memset(o,0,sizeof(o));
     cursetsize=1;
     pi.clear();
-    start_time = time(NULL);
-    cursetsize=100000;
 }
 void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
 	BigInt remain = A * A - f;
@@ -64,8 +62,8 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
             }
         }
         cur_time=time(NULL);
-        printf("%02ld:%02ld:%02ld  vector %d got\n",
-               (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
+        printf("%02ld:%02ld:%02ld  vector %d got cursetsize = %ld\n",
+               (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt,cursetsize);
         fflush(stdout);
     	ccnt++;
     }
@@ -91,8 +89,8 @@ void gen(BigInt A, int &ccnt, int num_prime, int &pcnt) {
                 }
             }
             cur_time=time(NULL);
-            printf("%02ld:%02ld:%02ld  vector %d got\n",
-                   (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt);
+            printf("%02ld:%02ld:%02ld  vector %d got cursetsize = %ld\n",
+                   (cur_time-start_time)/3600,(cur_time-start_time)/60-60*((cur_time-start_time)/3600),(cur_time-start_time)-60*(((cur_time-start_time))/60),ccnt,cursetsize);
             fflush(stdout);
     		ccnt++;
         }
@@ -118,7 +116,7 @@ void collect(BigInt f, int num_relation, int num_prime, float alpha) {
 	int ccnt = 0;
 	int pcnt = 0;
 
-	while (ccnt <= alpha*cursetsize && ccnt <= num_relation) {
+	while ((ccnt <= alpha*cursetsize && ccnt <= num_relation)||ccnt<50) {
 		gen(A, ccnt, num_prime, pcnt);
 		A=A+1;
 	}

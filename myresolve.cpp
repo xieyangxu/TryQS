@@ -21,16 +21,16 @@ bool myresolve(BigInt f, long DR, long DP, long trynum){
     printf("setsize = %ld\n",setsize);
     while(n<trynum){
         n++;
-        //printf("trynum = %d ",n);
+        printf("trynum = %d ",n);
         fflush(stdout);
         bool* t=linear_combiner(DR, DP, setsize);
         if(t==NULL){
-            //printf("failure: t= NULL \n");
+            printf("failure: t= NULL \n");
             free(t);
             failure_cnt++;
             continue;
         }
-        //print_combiniation(t, DP);
+        print_combiniation(t, DP);
         BigInt A=1,B=1;
         for(int i=0;i<DR;++i){
             if(t[i]){
@@ -39,19 +39,23 @@ bool myresolve(BigInt f, long DR, long DP, long trynum){
             }
         }
         B=B.bigsqrt();
-        //cout<<"A="<<A<<",B="<<B<<endl;
+        cout<<"A="<<A<<",B="<<B<<endl;
 
         BigInt gcd=biggcd(A-B,f);
         if(gcd==1||gcd==f){
-            //printf("failure: ordinary prime fector \n");
+            printf("failure: ordinary prime fector \n");
             free(t);
             failure_cnt++;
             continue;
         }
-        //cout<<"success!"<<f<<'='<<gcd<<'*'<<f/gcd<<endl;
+        cout<<"success!"<<f<<'='<<gcd<<'*'<<f/gcd<<endl;
+        ns.push(gcd);
+        ns.push(f/gcd);
         success_cnt++;
         free(t);
+        break;
     }
-    printf("success : %d, failure : %d\n",success_cnt,failure_cnt);
+    //printf("success : %d, failure : %d\n",success_cnt,failure_cnt);
+    if(n==trynum) rs.insert(f);
     return 0;
 }

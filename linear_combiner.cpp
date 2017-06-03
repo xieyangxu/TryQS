@@ -25,8 +25,10 @@ bool* linear_combiner(long DR, long DP, long setsize)
     set <int> s;
     set<int>::iterator it;
     int c=0;
+    long tt=(Alpha*setsize)-1;
+    if(tt>DR) tt=DR;
     while(s.size()<setsize){
-        int randnum=rand()%DR;
+        int randnum=rand()%(tt);
         s.insert(randnum);
     }
     for(it=s.begin();it!=s.end();++it,++c){

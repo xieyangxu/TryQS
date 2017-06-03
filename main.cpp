@@ -14,18 +14,48 @@ clock_t start_time_ms;
 clock_t cur_time_ms;
 float Alpha=1.2;
 BigInt f("0");
+multiset<BigInt> rs;
+stack<BigInt> ns;
+int dp(BigInt g){
+    if(g<BigInt("100000000")) return 150;
+    if(g<BigInt("10000000000")) return 200;
+    if(g<BigInt("1000000000000")) return 300;
+    if(g<BigInt("100000000000000")) return 400;
+    if(g<BigInt("10000000000000000")) return 500;
+    if(g<BigInt("1000000000000000000")) return 600;
+    else return 1000;
+}
 int main(int argc, char const *argv[])
 {
+    start_time = time(NULL);
+    if(argc==1){
+        cout<<"error : please import a positive integer!"<<endl;
+        return 0;
+    }
+    if(argc>2){
+        cout<<"error : too many args"<<endl;
+        return 0;
+    }
+    rs.clear();
+    while(!ns.empty()) ns.pop();
     int DR,DP;
-    string s;
-    s.resize(100);
     prime_gen();
-    freopen("case3.txt","r",stdin);
-    freopen("result3.txt","w",stdout);
-    for(int i=0;i<24;++i){
-        cin>>s>>DR>>DP>>Alpha;
-        cout<<"case "<<i<<":"<<endl<<"f = "<<s<<" DR = "<<DR<<" DP = "<<DP<<" Alpha = "<<Alpha<<endl;
-        f = BigInt(s.c_str());
+    ns.push(BigInt(argv[1]));
+    while(!ns.empty()){
+        f=ns.top();
+        ns.pop();
+        for(int i=1;p[i]<=D_P;++i){
+            while(f%p[i]==0){
+                rs.insert(p[i]);
+                f=f/p[i];
+            }
+        }
+        if(f<p[D_P]*p[D_P]){
+            if(f!=1) rs.insert(f);
+            continue;
+        }
+        DR=DP=dp(f);
+        cout<<"f = "<<f<<" DR = "<<DR<<" DP = "<<DP<<" Alpha = "<<Alpha<<endl;
         start_time_ms=clock();
         //prime_print();
         collect(f, DR, DP, Alpha);
@@ -35,11 +65,16 @@ int main(int argc, char const *argv[])
         //void collect(long f, int num_relation, int num_prime);
         //print_relation(D_R, D_P, 0);
         //void print_relation(int num_relation, int num_prime, int num_partial);
-
-        myresolve(f,DR,DP,1000);
+        myresolve(f,DR,DP,10000);
         cur_time_ms=clock();
-        printf("combine time = %ld ms\n\n",(cur_time_ms-start_time_ms)/1000);
-        
+        printf("combine time = %ld ms\n\n\n",(cur_time_ms-start_time_ms)/1000);
     }
-	return 0;
+    multiset<BigInt>::iterator msi;
+    cout<<"f = ";
+    for(msi=rs.begin();msi!=rs.end();++msi){
+        if(msi!=rs.begin()) cout<<"* ";
+        cout<<*msi<<" ";
+    }
+    cout<<endl;
+    return 0;
 }
