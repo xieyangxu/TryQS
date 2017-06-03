@@ -5,12 +5,13 @@
 #include <time.h>
 #include <set>
 #include <stack>
-#define D_P 1000  // Dimension of primes
-#define D_R 1000	// Dimension of relations
-#define D_PR 100000 // Dimension of partial relations
+#define D_SP 10000 // Dimension of small primes
+#define D_P 1000   // Dimension of primes
+#define D_R 1000   // Dimension of relations
+#define D_PR 50000 // Dimension of partial relations
 using namespace std;
 
-extern long p[D_P+10]; 			// Prime table
+extern long p[D_SP+10]; 			// Prime table
 extern bool m[D_R+10][D_P+10]; 	// Relation table
 extern BigInt y[D_R+10];			// Y table for each relation (y[i]^2 is factored in m[i])
 extern BigInt r[D_R+10];          // Remain number table of factor

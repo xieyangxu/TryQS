@@ -3,13 +3,13 @@
 #include <cstdlib>
 #include "prime_gen.h"
 
-long p[D_P+10];
+long p[D_SP+10];
 
 void prime_gen() {
 	p[1] = 2;
 	long n = 3;
 	int cnt = 1;
-	for (; cnt <= D_P; n++) {
+	for (; cnt <= D_SP; n++) {
 		int flag = 1;
 		long limit = sqrt(n) + 1;
 		for (int i = 1; i <= cnt; ++i)
@@ -28,7 +28,7 @@ void prime_gen() {
 
 void prime_print() {
 	//freopen("/Users/shenqianli/Desktop/p.txt","w",stdout);
-    for (int i = 0; i < D_P/10; ++i)
+    for (int i = 0; i < D_SP/10; ++i)
 	{
 		for (int j = 1; j <= 10; ++j)
 		{

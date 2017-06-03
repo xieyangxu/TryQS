@@ -130,6 +130,12 @@ bool BigInt::operator < (const BigInt &b) const
         return true;
     return false;
 }
+bool BigInt::operator >= (const BigInt &b) const
+{
+    if (compare(b) >= 0)
+        return true;
+    return false;
+}
 
 BigInt BigInt::operator - () const
 {
@@ -237,13 +243,13 @@ BigInt BigInt::operator /(const BigInt &b) //a,b are positive
         cerr << "cannot solve this division..." << endl;
         return 0;
     }
+    if (compare(b) < 0)
+        return 0;
     int da = DIGIT_MAX - 1, db = DIGIT_MAX - 1;
     while (num[da] == 0 && da > 0)
         --da;
     while (b.num[db] == 0 && db > 0)
         --db;
-    if (compare(b) < 0)
-        return 0;
     
     BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
     for (int i = da - db; i >= 0; --i)
@@ -286,13 +292,13 @@ BigInt BigInt::operator %(const BigInt &b) //a,b are positive
         cerr << "cannot solve this complementation..." << endl;
         return 0;
     }
+    if (compare(b) < 0)
+        return *this;
     int da = DIGIT_MAX - 1, db = DIGIT_MAX - 1;
     while (num[da] == 0 && da > 0)
         --da;
     while (b.num[db] == 0 && db > 0)
         --db;
-    if (compare(b) < 0)
-        return *this;
     
     BigInt divisor(b), quotient(0), remainder(*this), tmp(0);
     for (int i = da - db; i >= 0; --i)
@@ -364,6 +370,44 @@ BigInt BigInt::bigsqrt()
             remainder.num[2 * i + j] = partial_remainder.num[j];
     }
     return ans;
+}
+bool BigInt::isprime()
+{
+	bool binary[3500] = {};
+	BigInt tmp(*this);
+	tmp = tmp - 1;
+	int i;
+	for (i = 0; i < 3500; ++i)
+	{
+		if (tmp.num[0] % 2 == 0)
+			binary[i] = 0;
+		else
+			binary[i] = 1;
+		tmp = tmp / 2;
+		if (tmp == 0)
+			break;
+	}
+	for (i = 3499; i >= 0; --i)
+	if (binary[i])
+		break;
+	
+	BigInt c2(1);
+	for (i = 3499; i >= 0; --i)
+	{
+		c2 = (c2*c2) % (*this);
+		if (binary[i])
+			c2 = (c2*2) % (*this);
+	}
+	BigInt c3(1);
+	for (i = 3499; i >= 0; --i)
+	{
+		c3 = (c3*c3) % (*this);
+		if (binary[i])
+			c3 = (c3*3) % (*this);
+	}
+	if (c2 == 1 && c3 == 1)
+		return true;
+	return false;
 }
 
 ostream &operator << (ostream &o, const BigInt &a)

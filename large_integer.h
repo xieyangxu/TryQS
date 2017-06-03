@@ -23,6 +23,7 @@ public:
     bool operator == (const BigInt &) const;
     bool operator != (const BigInt &) const;
     bool operator < (const BigInt &) const;
+    bool operator >= (const BigInt &) const;
     
     BigInt operator - () const;
     BigInt operator +(const BigInt&);
@@ -31,6 +32,7 @@ public:
     BigInt operator /(const BigInt&);
     BigInt operator %(const BigInt&);
     BigInt bigsqrt();
+	bool isprime();
     
     friend ostream &operator << (ostream&, const BigInt&);
 };
